@@ -243,9 +243,9 @@ def open_submission(submit_response, cfg):
         driver.get(url)
         html = driver.page_source
         if "Accepted" in html:
-            print("Solution Accepted")
+            print("Accepted")
         else:
-            print("Solution Rejected")
+            print("Rejected")
 def main():
     parser = argparse.ArgumentParser(description='Submit a solution to Kattis')
     parser.add_argument('-p', '--problem',
