@@ -1,0 +1,15 @@
+# Please save this file as .kattisrc in your home directory.
+# This file includes a secret token that allows you to log in.
+# DO NOT SHARE IT WITH ANYONE ELSE.
+# If someone gets access to this token, please revoke it by changing your KATTIS password.
+
+[user]
+username: codingstreaks
+token: d129a516e3119b0e168834624bc3375cb348c5987ae739988e0371b4d3f1337c
+
+[kattis]
+hostname: open.kattis.com
+loginurl: https://open.kattis.com/login
+submissionurl: https://open.kattis.com/submit
+submissionsurl: https://open.kattis.com/submissions
+
