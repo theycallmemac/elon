@@ -4,6 +4,8 @@ import argparse
 import os
 import re
 import sys
+
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,6 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import requests
 import requests.exceptions
 import configparser
+import json
 
 _DEFAULT_CONFIG = '/usr/local/etc/kattisrc'
 _LANGUAGE_GUESS = {
@@ -221,7 +224,7 @@ def confirm_or_die(problem, language, files, mainclass, tag):
             print('Mainclass:', mainclass)
     if tag:
         print('Tag:', tag)
-
+    return problem, language, ', '.join(files)
 
 def open_submission(submit_response, cfg):
     submissions_url = get_url(cfg, 'submissionsurl', 'submissions')
@@ -242,11 +245,17 @@ def open_submission(submit_response, cfg):
         url = '%s/%s' % (submissions_url, submission_id)
         driver.get(url)
         html = driver.page_source
+
         if "Accepted" in html:
             print("Accepted")
+            return submission_id, "Accepted"
         else:
             print("Rejected")
+            return submission_id, "Rejected"
+
 def main():
+    data = {}
+    data['problem'] = []
     parser = argparse.ArgumentParser(description='Submit a solution to Kattis')
     parser.add_argument('-p', '--problem',
                    help=''''Which problem to submit to.
@@ -321,6 +330,8 @@ extension "%s"''' % (ext,))
     if not args.force:
         confirm_or_die(problem, language, files, mainclass, tag)
 
+
+
     try:
         result = submit(submit_url,
                         login_reply.cookies,
@@ -347,7 +358,17 @@ extension "%s"''' % (ext,))
     print(plain_result)
 
     try:
-        open_submission(plain_result, cfg)
+        id, status = open_submission(plain_result, cfg)
+
+        data["problem"].append({ 
+            "name": f"{problem}",
+            "language": f"{language}",
+            "files": f"{files}",
+            "id": f"{id}",
+            "status": f"{status}"
+        }) 
+        with open('temp.json', 'w') as f:  
+            json.dump(data, f)
     except configparser.NoOptionError:
         pass
 
