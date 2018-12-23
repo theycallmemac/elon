@@ -367,7 +367,7 @@ extension "%s"''' % (ext,))
             "id": f"{id}",
             "status": f"{status}"
         }) 
-        with open('temp.json', 'w') as f:  
+        with open('tmp/temp.json', 'w') as f:  
             json.dump(data, f)
     except configparser.NoOptionError:
         pass
